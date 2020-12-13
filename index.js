@@ -31,7 +31,7 @@ fs.readFile('current.json', 'utf-8', (err, data) => {
       throw err;
   }
   var current = JSON.parse(data.toString());
-  var image = current.image
+  var image = current.image+1
 
   var currentjsonin = {"image": image};
   var data = JSON.stringify(currentjsonin);
@@ -41,7 +41,7 @@ fs.readFile('current.json', 'utf-8', (err, data) => {
     }
     console.log(`JSON data is saved: ${image}`);
 
-    let target = `https://rule34.xxx/index.php?page=post&s=view&id=4303463`
+    let target = `https://rule34.xxx/index.php?page=post&s=view&id=${image}`
     
     axios.get(target, {
     timeout: 10000,
