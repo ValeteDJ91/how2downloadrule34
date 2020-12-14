@@ -3,6 +3,8 @@ const axios = require('axios');
 const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 
 blacktag = ['blacklistedtag1', 'blacklistedtag2']
+var taglog = 0
+var urllog = 0
 
 var imgsliced
 var imgindex1
@@ -69,16 +71,18 @@ fs.readFile('current.json', 'utf-8', (err, data) => {
       while (i < blacktag.length) {
         if (tagsliced.includes(blacktag[i])) {
           console.log("FAILED: Tag in blacklist")
-          console.log(`TAG: ${tagsliced}`)
+          if (taglog == 1) { console.log(`TAG: ${tagsliced}`) }
+          if (urllog == 1) { console.log(`URL: ${imgsliced}`) }
+          console.log(``)
           return;
         }
       i++
       }
-      if (imgsliced.includes("video")) {console.log("FAILED: Video");return;}
+      if (imgsliced.includes("video")) {console.log("FAILED: Video");console.log(``);return;}
       let currentlydownloading = download_image(`${imgsliced}`, `homework/${image}.png`);
       console.log(`sucess: ${image}`)
-      console.log(`TAG: ${tagsliced}`)
-      console.log(`URL: ${imgsliced}`)
+      if (taglog == 1) { console.log(`TAG: ${tagsliced}`) }
+      if (urllog == 1) { console.log(`URL: ${imgsliced}`) }
       console.log(``)
     });
   });
