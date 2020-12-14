@@ -2,8 +2,13 @@ const fs = require('fs');
 const axios = require('axios');
 const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 
+// options
+
+// put blacklisted tag in here
 blacktag = ['blacklistedtag1', 'blacklistedtag2']
+// 1 log all the tag for each image 0 log nothing
 var taglog = 0
+// 1 log image s url 0 log nothing
 var urllog = 0
 
 var imgsliced
