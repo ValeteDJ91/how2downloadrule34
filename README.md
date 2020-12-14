@@ -11,4 +11,4 @@ To stop the program press Ctrl+C and read the instructions
 
 All the images are downloaded in the homework folder
 
-you can edit blacklisted tag and log option in index.js line:5
+you can edit blacklisted tag and log options in index.js line:5
