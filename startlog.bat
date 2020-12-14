@@ -1,5 +1,5 @@
 @ECHO OFF
 
 :loop
-node index.js 1> last.log
+node index.js 1>> log.log
 GOTO loop
