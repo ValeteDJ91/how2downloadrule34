@@ -7,10 +7,17 @@ blacktag = ['blacklistedtag1', 'blacklistedtag2']
 var imgsliced
 var imgindex1
 var imgindex2
-const imgsearch1 = `<a href="#" onclick="toggleEditForm(); return false;">Edit</a>`;
-const imgsearch2 = `style="font-weight: bold;">Original image</a>`;
-const tag1 = `<div id="note-container">`;
+var tagsliced
+var tagindex1
+var tagindex2
+var tagindex3
+var tagindex4
+const imgsearch1 = `<meta property="og:image" itemprop="image" content="`;
+const imgsearch2 = `<script type="text/javascript">
+function iCame(c){	var a; try{a=new XMLHttpRequest()}catch(b){try{a=new ActiveXObject("Msxml2.XMLHTTP")}catch(b){try{a=new`;
+const tag1 = `//<![CDATA[`;
 const tag2 = `id="image" onclick="Note.toggle();"`;
+const tag3 = `"`
 
 const download_image = (url, image_path) =>
 axios({
@@ -47,28 +54,32 @@ fs.readFile('current.json', 'utf-8', (err, data) => {
     timeout: 10000,
     headers: {'X-Requested-With': 'XMLHttpRequest'}
     }).then(function (response) {
+      console.log(`trying: ${image}`)
       imgindex1 = response.data.indexOf(imgsearch1)
       imgindex2 = response.data.indexOf(imgsearch2)
-      imgsliced = response.data.slice(imgindex1+204, imgindex2-89)
+      imgsliced = response.data.slice(imgindex1+52, imgindex2-11)
       tagindex1 = response.data.indexOf(tag1)
       tagindex2 = response.data.indexOf(tag2)
-      tagsliced = response.data.slice(tagindex1+331, tagindex2-119)
-      if (imgsliced.length > 100||imgsliced.length < 5) {
-        console.log("Failed")
-        return;
-      }
+      tagsliced = response.data.slice(tagindex1+260, tagindex2-107)
+      tagindex3 = tagsliced.indexOf(tag3)
+      tagsliced = tagsliced.slice(tagindex3+1, 1000)
+      tagindex4 = tagsliced.indexOf(tag3)
+      tagsliced = tagsliced.slice(1, tagindex4)
       var i = 0
       while (i < blacktag.length) {
         if (tagsliced.includes(blacktag[i])) {
-          console.log("Tag in blacklist")
+          console.log("FAILED: Tag in blacklist")
+          console.log(`TAG: ${tagsliced}`)
           return;
         }
       i++
       }
+      if (imgsliced.includes("video")) {console.log("FAILED: Video");return;}
       let currentlydownloading = download_image(`${imgsliced}`, `homework/${image}.png`);
       console.log(`sucess: ${image}`)
       console.log(`TAG: ${tagsliced}`)
-      console.log(imgsliced)
+      console.log(`URL: ${imgsliced}`)
+      console.log(``)
     });
   });
 });
