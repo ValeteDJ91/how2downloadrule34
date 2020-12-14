@@ -40,20 +40,19 @@ axios({
     }),
 );
 
-fs.readFile('current.json', 'utf-8', (err, data) => {
-  if (err) {
-      throw err;
-  }
-  var current = JSON.parse(data.toString());
-  var image = current.image+1
-
-  var currentjsonin = {"image": image};
+fs.readFile('variables.json', 'utf-8', (err, data) => {
+  if (err) { throw err; }
+  var variables = JSON.parse(data.toString());
+  var image = variables.image
+  var currentjsonin = { 
+    "image": image+1,
+    "success": variables.success, 
+    "failed": variables.failed
+};
   var data = JSON.stringify(currentjsonin);
-  fs.writeFile('current.json', data, (err) => {
-    if (err) {
-        throw err;
-    }
-    console.log(`JSON data is saved: ${image}`);
+  fs.writeFile('variables.json', data, (err) => {
+    if (err) { throw err; }
+    console.log(`JSON data is saved: ${image}`);console.error(`JSON data is saved: ${image}`);
 
     let target = `https://rule34.xxx/index.php?page=post&s=view&id=${image}`
     
@@ -61,7 +60,7 @@ fs.readFile('current.json', 'utf-8', (err, data) => {
     timeout: 10000,
     headers: {'X-Requested-With': 'XMLHttpRequest'}
     }).then(function (response) {
-      console.log(`trying: ${image}`)
+      console.log(`trying: ${image}`);console.error(`trying: ${image}`)
       imgindex1 = response.data.indexOf(imgsearch1)
       imgindex2 = response.data.indexOf(imgsearch2)
       imgsliced = response.data.slice(imgindex1+52, imgindex2-11)
@@ -75,20 +74,45 @@ fs.readFile('current.json', 'utf-8', (err, data) => {
       var i = 0
       while (i < blacktag.length) {
         if (tagsliced.includes(blacktag[i])) {
-          console.log("FAILED: Tag in blacklist")
-          if (taglog == 1) { console.log(`TAG: ${tagsliced}`) }
-          if (urllog == 1) { console.log(`URL: ${imgsliced}`) }
-          console.log(``)
+          console.log("FAILED: Tag in blacklist");console.error("FAILED: Tag in blacklist")
+          if (taglog == 1) { console.log(`TAG: ${tagsliced}`);console.error(`TAG: ${tagsliced}`) }
+          if (urllog == 1) { console.log(`URL: ${imgsliced}`);console.error(`URL: ${imgsliced}`) }
+          console.log(``);console.error(``)
+          var currentjsonin2 = { 
+            "image": image+1,
+            "success": variables.success, 
+            "failed": variables.failed+1
+          };
+          var data3 = JSON.stringify(currentjsonin2);
+          fs.writeFileSync('variables.json', data3, 'utf-8');
           return;
         }
       i++
       }
-      if (imgsliced.includes("video")) {console.log("FAILED: Video");console.log(``);return;}
+      if (imgsliced.includes("video")) {
+        console.log("FAILED: Video");console.error("FAILED: Video")
+        console.log(``);console.error(``)
+        var currentjsonin2 = { 
+          "image": image+1,
+          "success": variables.success, 
+          "failed": variables.failed+1
+        };
+        var data3 = JSON.stringify(currentjsonin2);
+        fs.writeFileSync('variables.json', data3, 'utf-8');
+        return;
+      }
       let currentlydownloading = download_image(`${imgsliced}`, `homework/${image}.png`);
-      console.log(`sucess: ${image}`)
-      if (taglog == 1) { console.log(`TAG: ${tagsliced}`) }
-      if (urllog == 1) { console.log(`URL: ${imgsliced}`) }
-      console.log(``)
+      console.log(`sucess: ${image}`);console.error(`sucess: ${image}`)
+      if (taglog == 1) { console.log(`TAG: ${tagsliced}`);console.error(`TAG: ${tagsliced}`) }
+      if (urllog == 1) { console.log(`URL: ${imgsliced}`);console.error(`URL: ${imgsliced}`) }
+      var currentjsonin1 = { 
+        "image": image+1,
+        "success": variables.success+1, 
+        "failed": variables.failed
+      };
+      var data2 = JSON.stringify(currentjsonin1);
+      fs.writeFileSync('variables.json', data2, 'utf-8');
+      console.log(``);console.error(``)
     });
   });
 });

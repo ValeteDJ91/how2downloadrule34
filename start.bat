@@ -1,4 +1,5 @@
 @ECHO OFF
-:go
-node index.js
-GOTO go
+
+:loop
+node index.js 1>> log.log
+GOTO loop
