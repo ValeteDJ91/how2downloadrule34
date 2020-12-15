@@ -11,6 +11,7 @@ var taglog = 0
 // 1 log image s url 0 log nothing
 var urllog = 0
 
+var front = `https://rule34.xxx/index.php?page=post&s=list&tags=all`
 var imgsliced
 var imgindex1
 var imgindex2
@@ -19,6 +20,11 @@ var tagindex1
 var tagindex2
 var tagindex3
 var tagindex4
+const frontsearch1 = `</iframe>
+<br /><br />
+<div>
+<span id=`
+const frontsearch2 = ` class="thumb"><a id="`
 const imgsearch1 = `<meta property="og:image" itemprop="image" content="`;
 const imgsearch2 = `<script type="text/javascript">
 function iCame(c){	var a; try{a=new XMLHttpRequest()}catch(b){try{a=new ActiveXObject("Msxml2.XMLHTTP")}catch(b){try{a=new`;
@@ -44,6 +50,22 @@ fs.readFile('variables.json', 'utf-8', (err, data) => {
   if (err) { throw err; }
   var variables = JSON.parse(data.toString());
   var image = variables.image
+  
+  axios.get(front, {
+  timeout: 10000,
+  headers: {'X-Requested-With': 'XMLHttpRequest'}
+  }).then(function (response) {
+    frontindex1 = response.data.indexOf(frontsearch1)
+    frontindex2 = response.data.indexOf(frontsearch2)
+    maxsliced = response.data.slice(frontindex1+40, frontindex2-1)
+
+    if (maxsliced-2 < image) {
+      console.log(`FAILED: downloaded all the images (${image}/${max})`)
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30*1000);
+      return;
+    }
+  });
+
   var currentjsonin = { 
     "image": image+1,
     "success": variables.success, 
