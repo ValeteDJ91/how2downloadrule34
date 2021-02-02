@@ -1,7 +1,7 @@
 # how2downloadrule34
 a programm that download all the rule34 image
 
-TOU MUST HAVE ALREADY INSTALLED NODE.JS
+YOU MUST HAVE ALREADY INSTALLED NODE.JS
 https://nodejs.org
 
 First download the file and extract it wherever you want
