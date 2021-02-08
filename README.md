@@ -14,4 +14,4 @@ Use "./startlog.bat" if you want a log.log file to be created
 
 All the images are downloaded in the homework folder ( "/how2downloadrule34/homework" )
 
-you can edit blacklisted tag and log options in index.js line:5
+you can edit blacklisted tag and log options in index.js line:7
